@@ -1,3 +1,3 @@
 -BST-algorithm
 
-Binary Search Tree Algorithm in C+
+Binary Search Tree Algorithm in C++
