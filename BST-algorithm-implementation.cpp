@@ -26,13 +26,14 @@ class bst
 public:
 	node* root;
 	void insert (int);
-	void deletion (int);
+	void deleter (node*);
 	void display ();
 	node* search (int);
 	int level (node*);
 	void spacetab (int);
 	void space (int);
-	void display2 (node *Node,int level);
+	void display2 (node*,int);
+	void interchange (node*, node*);
 };
 
 void bst::spacetab (int count)
@@ -109,6 +110,38 @@ node* bst::search(int element)
 	return NULL;
 }
 
+void bst::interchange (node* first, node* second)
+{
+	if (first->parent == NULL)
+		root = second;
+	else
+	{
+		if (first->parent->leftChild !=NULL)
+			first->parent->leftChild = second;
+		else
+			first->parent->rightChild = second;
+
+	}
+	if (second != NULL)
+		second->parent = first->parent;
+}
+
+void bst::deleter (node* number)
+{
+	if (number->leftChild == NULL)
+		interchange (number, number->rightChild);
+	else
+	{
+		if (number->rightChild == NULL)
+			interchange (number, number->leftChild);
+		else
+		{
+			
+		}
+	}
+
+}
+
 void bst::display2 (node *Node,int level)
 {
 	if (Node == NULL);
@@ -155,6 +188,8 @@ void bst::display()
 	}
 }
 
+
+
 int main()
 {
 	bst * tempTree = new bst();
@@ -176,24 +211,42 @@ int main()
 					cin >> temp;
 					tempTree->insert(temp);
 				}
+				cout << endl;
 				break;
 			}
 			case 4 : 
 			{
 				int temp;
-				cout << "Enter your number for search, here :" << endl;
+				cout << "\nEnter your number for search, here :" << endl;
 				cin >> temp;
 				if ( tempTree->search(temp) != NULL )
-					cout << "Found!" << endl;
+					cout << "\n\tFound!\n" << endl;
 				else
-					cout << "Not found!" << endl;
+					cout << "\n\tNot found!\n" << endl;
+				cout << endl;
 				break;
+			}
+			case 3 :
+			{
+				int temp;
+				cout << "\nEnter your number for deletion, here :" << endl;
+				cin >> temp;
+				if ( tempTree->search(temp) == NULL )
+					cout << "\n\tThere is no such thing !\n" << endl;
+				else
+				{
+					node* tempNode = new node();
+					tempNode = tempTree->search(temp);
+					tempTree->deleter(tempNode);
+					cout << "\n\tThe node is deleted!\n" << endl;
+				}
+
 			}
 
 		}
 	}
 	while (select != 5);
-	cout << "Thanks for use me :-)\n";
+	cout << "\n\tThanks for use me :-)\n" << endl;
 
 	return 0;
 }
