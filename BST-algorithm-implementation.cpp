@@ -27,12 +27,12 @@ public:
 	node* root;
 	void insert (int);
 	void deleter (node*);
-	void display ();
+	void display (node*);
 	node* search (int);
 	int level (node*);
 	void spacetab (int);
 	void space (int);
-	void display2 (node*,int);
+	void display2 ();
 	void interchange (node*, node*);
 };
 
@@ -84,15 +84,14 @@ int bst::level(node* aNode) {
     int righth = level(aNode->rightChild);
 
     if (lefth > righth) {
-        return lefth + 1;
+        return lefth;
     } else {
-        return righth + 1;
+        return righth;
     }
 }
 
 node* bst::search(int element)
 {
-	node* tempNode = new node();
 	node* tempRoot = new node();
 	tempRoot = root;
 	while (tempRoot != NULL)
@@ -101,10 +100,13 @@ node* bst::search(int element)
 		{
 			return tempRoot;
 		}
-		if (element <= tempRoot->data)
-			tempRoot = tempRoot->leftChild;
 		else
-			tempRoot = tempRoot->rightChild;
+		{
+			if (element <= tempRoot->data)
+				tempRoot = tempRoot->leftChild;
+			else
+				tempRoot = tempRoot->rightChild;
+		}
 
 	}
 	return NULL;
@@ -142,50 +144,25 @@ void bst::deleter (node* number)
 
 }
 
-void bst::display2 (node *Node,int level)
+void bst::display2 ()
 {
-	if (Node == NULL);
+	display(root);
 }
 
-void bst::display()
+void bst::display(node* temp)
 {
-	int height = level(root);
-	int counter = height;
-	if (root == NULL)
-		cout << "Tree is empty!" << endl;
-	if (level(root) == 0)
+	if (temp != NULL)
 	{
-		spacetab (1);
-		cout << root->data << endl;
-	}
-	else
-	{
-		spacetab(counter);
-		space(counter);
-		cout << root << endl;
-		counter--;
-		node* tempNode = new node();
-		node* tempLeft = new node();
-		node* tempRight = new node();
-		tempNode = root;
-		tempRight = tempNode->rightChild; 
-		tempLeft = tempNode->leftChild;
-		while (tempRight != NULL || tempLeft != NULL)
-		{
-			if ( tempLeft != NULL )
-			{
-				cout << tempLeft->data ;
+		if (temp->leftChild != NULL)
+			display(temp->leftChild);
+		if (temp->rightChild != NULL)
+			display(temp->rightChild);
+		cout << temp->data ;
 				spacetab(1) ;
 				cout << " ";
-				tempLeft = tempLeft->leftChild;
-			}
-			else
-				cout << " " ;
-				spacetab(1);
-				cout << " ";
-		}
-
 	}
+	else 
+		cout << "\t\nTree is empty\n" << endl;
 }
 
 
@@ -206,11 +183,13 @@ int main()
 			{
 				int temp = 0;
 				cout << "Enter your number (if you wanna quite enter -1)" << endl;
-				while (temp != -1)
+				do
 				{
 					cin >> temp;
-					tempTree->insert(temp);
+					if (temp != -1)
+						tempTree->insert(temp);
 				}
+				while (temp != -1);
 				cout << endl;
 				break;
 			}
@@ -241,6 +220,14 @@ int main()
 					cout << "\n\tThe node is deleted!\n" << endl;
 				}
 
+			}
+			case 2 :
+			{
+				//int level = tempTree->level(tempTree->root);
+				//cout << "\n\t" << "The Height of the tree is :" << level << endl << endl;
+				tempTree->display2();
+				cout << endl;
+				break;
 			}
 
 		}
