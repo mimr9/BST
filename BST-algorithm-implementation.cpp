@@ -13,6 +13,12 @@ public:
 	node (void);
 };
 
+//####################################################################
+//#																   #
+//#		/*Definition the Node*/                                    #
+//#																   #
+//####################################################################
+
 node::node (void)
 {
 	data = 0;
@@ -20,6 +26,12 @@ node::node (void)
 	leftChild = NULL;
 	rightChild = NULL;
 }
+
+//####################################################################
+//#																   #
+//#		/*The interface of the Binary Search Tree class*/          #
+//#																   #
+//####################################################################
 
 class bst
 {
@@ -34,7 +46,14 @@ public:
 	void space (int);
 	void display2 ();
 	void interchange (node*, node*);
+	node* successor (node*);
 };
+
+//####################################################################
+//#																   #
+//#		/*A function that gonna use in display functions*/         #
+//#																   #
+//####################################################################
 
 void bst::spacetab (int count)
 {
@@ -42,11 +61,23 @@ void bst::spacetab (int count)
 		cout << "    ";
 }
 
+//####################################################################
+//#																   #
+//#		/*Another function that gonna use in display functions*/   #
+//#																   #
+//####################################################################
+
 void bst::space (int count)
 {
 	for (int i=0; i < count; i++)
 		cout << " ";
 }
+
+//####################################################################
+//#																   #
+//#		/*Implemetation of the insert function*/ 	    	       #
+//#																   #
+//####################################################################
 
 void bst::insert (int number)
 {
@@ -62,7 +93,7 @@ void bst::insert (int number)
 		while (tempNode1 != NULL)
 		{
 			tempNode2 = tempNode1;
-			if (newNode->data <= root->data)
+			if (newNode->data <= tempNode1->data)
 				tempNode1 = tempNode1->leftChild;
 			else
 				tempNode1 = tempNode1->rightChild;
@@ -75,6 +106,12 @@ void bst::insert (int number)
 
 	}
 }
+
+//####################################################################
+//#																   #
+//#		/*Afunction for calculate the tree's height*/ 	    	   #
+//#																   #
+//####################################################################
 
 int bst::level(node* aNode) {
     if (aNode == NULL)
@@ -89,6 +126,12 @@ int bst::level(node* aNode) {
         return righth;
     }
 }
+
+//####################################################################
+//#																   #
+//#		/*The search function of the tree*/ 	   				   #
+//#																   #
+//####################################################################
 
 node* bst::search(int element)
 {
@@ -112,6 +155,12 @@ node* bst::search(int element)
 	return NULL;
 }
 
+//####################################################################
+//#																   #
+//#		/*This is a function that used in delete function*/ 	   #
+//#																   #
+//####################################################################
+
 void bst::interchange (node* first, node* second)
 {
 	if (first->parent == NULL)
@@ -128,44 +177,126 @@ void bst::interchange (node* first, node* second)
 		second->parent = first->parent;
 }
 
-void bst::deleter (node* number)
+//####################################################################
+//#																   #
+//#		/*This is a function that used in delete function*/ 	   #
+//#																   #
+//####################################################################
+
+node* bst::successor(node* currentNode)
 {
-	if (number->leftChild == NULL)
-		interchange (number, number->rightChild);
+	node* tempNode = new node();
+	node* backTempNode = new node();
+	tempNode = currentNode;
+
+	if (tempNode->rightChild != NULL)
+	{
+		tempNode = tempNode->rightChild;
+		while (tempNode != NULL)
+		{
+			backTempNode = tempNode;
+			tempNode = tempNode->leftChild;
+		}
+		return backTempNode;
+	}
 	else
 	{
-		if (number->rightChild == NULL)
-			interchange (number, number->leftChild);
+		backTempNode = tempNode;
+		tempNode = tempNode->parent;
+		while (tempNode != NULL && tempNode->rightChild == backTempNode)
+		{
+			backTempNode = tempNode;
+			tempNode = tempNode->parent;
+		}
+		return tempNode;
+	}
+}
+//####################################################################
+//#																   #
+//#		/*The delete function of the Binary Search Tree*/ 		   #
+//#																   #
+//####################################################################
+
+void bst::deleter (node* number)
+{
+	if (number->rightChild == NULL || number->leftChild == NULL)
+	{
+		node* p = number->parent;
+		if (p == NULL)
+		{
+			if (number->rightChild != NULL)
+				root = number->rightChild;
+			else
+				root = number->leftChild;
+		}
+		else if (p->rightChild == number)
+		{
+			if (number->rightChild != NULL)
+				p->rightChild = number->rightChild;
+			else
+				p->rightChild = number->leftChild;
+		}
 		else
 		{
-			
+			if (number->rightChild != NULL)
+				p->leftChild = number->rightChild;
+			else
+				p->leftChild = number->leftChild;
 		}
+	}
+	else
+	{
+		node* succesor = new node();
+			succesor = successor(number);
+			if (succesor->parent != number)
+			{
+				interchange(succesor, succesor->rightChild);
+				succesor->rightChild = number->rightChild;
+				succesor->rightChild->parent = succesor;
+			}
+			interchange(number, succesor);
+			succesor->leftChild = number->leftChild;
+			succesor->leftChild->parent = succesor;
 	}
 
 }
+
+//####################################################################
+//#																   #
+//#		/*Try for display the Binary Search Tree*/ 		   		   #
+//#																   #
+//####################################################################
 
 void bst::display2 ()
 {
 	display(root);
 }
 
+//####################################################################
+
 void bst::display(node* temp)
 {
 	if (temp != NULL)
 	{
+
 		if (temp->leftChild != NULL)
 			display(temp->leftChild);
-		if (temp->rightChild != NULL)
-			display(temp->rightChild);
 		cout << temp->data ;
 				spacetab(1) ;
 				cout << " ";
+		if (temp->rightChild != NULL)
+			display(temp->rightChild);
+		
 	}
 	else 
 		cout << "\t\nTree is empty\n" << endl;
 }
 
-
+//####################################################################
+//#																   #
+//#		/*The main function of the Tree*/ 		 	    		   #
+//#																   #
+//####################################################################
 
 int main()
 {
@@ -218,16 +349,17 @@ int main()
 					tempNode = tempTree->search(temp);
 					tempTree->deleter(tempNode);
 					cout << "\n\tThe node is deleted!\n" << endl;
+					break;
 				}
 
 			}
 			case 2 :
 			{
-				//int level = tempTree->level(tempTree->root);
-				//cout << "\n\t" << "The Height of the tree is :" << level << endl << endl;
-				tempTree->display2();
-				cout << endl;
-				break;
+				cout << "root=> " << tempTree->root->data << endl;
+				cout << tempTree->root->leftChild->data << "\t" << tempTree->root->rightChild->data <<endl;
+ 				tempTree->display2();
+ 				cout << endl;
+ 				break;
 			}
 
 		}
