@@ -39,7 +39,7 @@ public:
 	node* root;
 	void insert (int);
 	void deleter (node*);
-	void display (node*);
+	void display (node*, int);
 	node* search (int);
 	int level (node*);
 	void spacetab (int);
@@ -47,6 +47,8 @@ public:
 	void display2 ();
 	void interchange (node*, node*);
 	node* successor (node*);
+	void inorder(node*);
+	void display3 (node*);
 };
 
 //####################################################################
@@ -269,23 +271,76 @@ void bst::deleter (node* number)
 
 void bst::display2 ()
 {
-	display(root);
+	display(root, level(root));
 }
 
 //####################################################################
+void bst::display(node *Node,int level)
+{
+	if (root == NULL)
+	{
+		cout << "Tree is empty." << endl;
+	}
+	else
+	{
+		if (Node->rightChild != NULL)
+		{
+			display(Node->rightChild, level + 1);
+		}
+		
+		if (Node != root)
+		{
+			for (int i = 0; i < level + 1; i++)
+			{
+				cout << "      ";
+			}
+		}
+		else
+		{
+			cout << "->";
+		}
 
-void bst::display(node* temp)
+		cout << Node->data << endl;
+
+		if (Node->leftChild != NULL)
+		{
+			display(Node->leftChild, level + 1);
+		}
+	}
+
+}
+//########################################################
+void bst::inorder(node* temp)
+	{
+		if (temp != NULL)
+		{
+
+			if (temp->leftChild != NULL)
+				display3(temp->leftChild);
+			cout << temp->data ;
+					spacetab(1) ;
+					cout << " ";
+			if (temp->rightChild != NULL)
+				display3(temp->rightChild);
+			
+		}
+		else 
+			cout << "\t\nTree is empty\n" << endl;
+	}
+
+//#########################################################
+void bst::display3(node* temp)
 {
 	if (temp != NULL)
 	{
 
 		if (temp->leftChild != NULL)
-			display(temp->leftChild);
+			display3(temp->leftChild);
 		cout << temp->data ;
 				spacetab(1) ;
 				cout << " ";
 		if (temp->rightChild != NULL)
-			display(temp->rightChild);
+			display3(temp->rightChild);
 		
 	}
 	else 
@@ -355,11 +410,33 @@ int main()
 			}
 			case 2 :
 			{
-				cout << "root=> " << tempTree->root->data << endl;
-				cout << tempTree->root->leftChild->data << "\t" << tempTree->root->rightChild->data <<endl;
- 				tempTree->display2();
- 				cout << endl;
- 				break;
+				int choice;
+				cout << "\n\tEnter one of these options :\n\t\t1. Visual display\n\t\t2. Inorder display\n" ;
+				cin >> choice;
+				if (choice == 1)
+				{
+					if (tempTree->root != NULL)
+					{
+						tempTree->display2();
+		 				cout << endl;
+		 				break;
+	 				}
+	 				else
+	 					cout << "\n\tTree is empty.\n\tPlease insert some integers!\n" << endl;
+	 				break;
+	 			}
+	 			else
+	 			{
+	 				if (tempTree->root != NULL)
+					{
+						tempTree->inorder(tempTree->root);
+		 				cout << endl;
+		 				break;
+	 				}
+	 				else
+	 					cout << "\n\tTree is empty.\n\tPlease insert some integers!\n" << endl;
+	 				break;
+	 			}
 			}
 
 		}
